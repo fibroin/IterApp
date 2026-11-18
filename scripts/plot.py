@@ -13,7 +13,7 @@ def plot_inc_nodes(dir = './'):
 
     fig, ax = plt.subplots(1,1,figsize=(10,7),layout='constrained')
 
-    data['Setting'] = data[['threads']].apply(lambda x: f'Threads {x[0]:.0e}', axis = 1)
+    data['Setting'] = data[['threads']].apply(lambda x: f'Threads {x["threads"]:.0e}', axis = 1)
     nr_hues = len(data['Setting'].unique())
     sns.lineplot(data, x='nodes', y='graph_creation', hue='Setting',
                     palette=_COLORS[:nr_hues], style='Setting', markers=True)
@@ -32,7 +32,7 @@ def plot_inc_git(dir = './'):
                       pd.read_csv(f'{dir}output_graph_increase_it_detailed.txt',
                                   sep=r'\s*,\s*', engine='python').drop(columns=['build'])])
 
-    data['Setting'] = data[['mode','threads']].apply(lambda x: f'{"Graph" if x[0] == 1 else "Baseline"}: Threads {x[1]:.0e}', axis = 1)
+    data['Setting'] = data[['mode','threads']].apply(lambda x: f'{"Graph" if x["threads"] == 1 else "Baseline"}: Threads {x["threads"]:.0e}', axis = 1)
     nr_hues = len(data['Setting'].unique())
     fig, ax = plt.subplots(1,1,figsize=(10,7),layout='constrained')
     sns.lineplot(data, errorbar='sd', x='launches', y='exec', hue='Setting',
@@ -56,7 +56,7 @@ def plot_graph_ratio(dir='./'):
     nodes = 'nodes'
 
     mins = data.groupby(by=groupby, as_index=False).mean().groupby(by=[groupby[0]]).min()[time]
-    data[time] = data[time_min].apply(lambda x: x[1]/mins[x[0]].min(), axis = 1)
+    data[time] = data[time_min].apply(lambda x: x['cuda_diff']/mins[x['threads']].min(), axis = 1)
 
     data['Setting'] = data[['threads']].apply(lambda x: f'Threads {x["threads"]:.0e}', axis = 1)
 
