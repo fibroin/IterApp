@@ -32,9 +32,10 @@ void generateRandVector(DataType* v, int v_len, DataType min, DataType max,
 /*Get the current CPU time in seconds as a double.*/
 double getCpuSeconds(void)
 {
-  struct timeval tp;
-  gettimeofday(&tp, NULL);
-  return ((double) tp.tv_sec + (double) tp.tv_usec * 1.e-6);
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+
+  return (double)ts.tv_sec + (double)ts.tv_nsec * 1.e-9;
 }
 
 /* Print the measured times:
